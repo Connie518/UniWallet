@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>UniWallet - Register</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+</head>
+
+<body>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 90vh;">
+        
+        <h1 style="margin-bottom: 20px;">建立帳號</h1>
+        <p id="message" style="display: none; font-weight: bold; padding: 10px 20px"; border-radius: 4px; margin: 10px auto;></p>
+
+        <form id="register-form" style="width: 300px; display: flex; flex-direction: column;">            
+            <label style="margin-bottom: 5px;">帳號：</label>
+            <input type="text" id="username" placeholder="請輸入帳號" minlength="3" maxlength="20" required style="width: 100%; box-sizing: border-box; margin-bottom: 15px;">
+
+            <label style="margin-bottom: 5px;">密碼：</label>
+            <input type="password" id="password" placeholder="請輸入密碼（至少 6 位數）" minlength="6" required style="width: 100%; box-sizing: border-box; margin-bottom: 15px;">
+            
+            <label style="margin-bottom: 5px;">確認密碼：</label>
+            <input type="password" id="confirm_password" placeholder="請再次輸入密碼" minlength="6" required style="width: 100%; box-sizing: border-box; margin-bottom: 15px;">
+            
+            <div style="text-align: center; width: 100%;">
+                <button type="submit" style="width: 100px; margin-top: 15px;">註冊</button>
+            </div>
+        </form>
+        
+        <hr style="width: 300px; margin: 20px 0;">
+        <p><a href="/">回首頁</a></p>
+        
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const messageBox = document.getElementById('message');
+
+            messageBox.style.display = 'none';
+
+            if (password !== confirmPassword) {
+                messageBox.innerText = '兩次輸入的密碼不一致，請重新檢查！';
+                messageBox.style.display = 'inline-block';
+                messageBox.style.color = '#ff6b6b';
+                messageBox.style.background = '#ffe3e3';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${CONFIG.API_HOST}/api/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password,
+                        confirm_password: confirmPassword
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageBox.innerText = data.message;
+                    messageBox.style.display = 'inline-block';
+                    messageBox.style.color = '#008000';
+                    messageBox.style.background = '#e3fff0';
+
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    messageBox.innerText = data.message;
+                    messageBox.style.display = 'inline-block';
+                    messageBox.style.color = '#ff6b6b';
+                    messageBox.style.background = '#ffe3e3';
+                }
+            } catch (error) {
+                console.error('無法連接到後端 API:', error);
+                messageBox.innerText = '無法連接到伺服器，請檢查網路連線。';
+                messageBox.style.display = 'inline-block';
+                messageBox.style.color = '#ff6b6b';
+                messageBox.style.background = '#ffe3e3';
+            }
+        });
+    </script>
+
+</body>
+</html>

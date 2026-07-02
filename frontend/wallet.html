@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniWallet</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>UniWallet</h1>
+        <p><strong id="usernameDisplay"></strong><a href="/" id="logoutBtn" style="margin-left: 10px;">登出</a></p>
+    </div>
+    
+    <h2>消費紀錄</h2>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; padding: 10px; border-radius: 6px;">
+        <span style="font-weight: bold; font-size: 1em;">篩選：</span>
+        
+        <span style="color: #ccc; font-size: 1em;">從</span>
+        <input type="date" id="filterStartDate" style="margin: 0; width: 100px; padding: 4px 8px; background: #222; color: #fff; border: 1px solid #444; border-radius: 4px;">
+        <span style="color: #ccc; font-size: 1em;">至</span>
+        <input type="date" id="filterEndDate" style="margin: 0; width: 100px; padding: 4px 8px; background: #222; color: #fff; border: 1px solid #444; border-radius: 4px;">
+
+        <select id="filterCategory" style="margin: 0; width: 100px; padding: 4px 8px;">
+            <option value="all">所有類別</option>
+        </select>
+
+        <select id="filterItem" style="margin: 0; width: 100px; padding: 4px 8px;">
+            <option value="all">所有品項</option>
+        </select>
+
+        <select id="filterCurrency" style="margin: 0; width: 100px; padding: 4px 8px;">
+            <option value="all">所有貨幣</option>
+        </select>
+        
+        <button type="button" id="resetFilterBtn" style="width: auto; margin: 0; padding: 4px 12px; font-size: 1em;">重置</button>
+    </div>
+
+    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #444; border-radius: 6px; margin-bottom: 20px;">
+        <table id="recordsTable" style="width: 100%; margin: 0; border-collapse: collapse;">
+            <thead style="position: sticky; top: 0; background-color: #222; z-index: 1;">
+                <tr>
+                    <th>日期</th>
+                    <th>類別</th>
+                    <th>品項</th>
+                    <th>貨幣</th>
+                    <th>金額</th>
+                    <th>台幣</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="recordsTbody"></tbody>
+        </table>
+    </div>
+
+    <h2>消費統計</h2>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; padding: 10px; border-radius: 6px; min-height: 250px; position: relative;">
+        
+        <div id="chartContainer" style="max-width: 300px; margin: 0 auto; width: 100%;">
+            <canvas id="categoryPieChart"></canvas>
+        </div>
+
+        <div id="noChartDataHint" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #888; width: 100%; flex: 1;">
+            目前尚無消費數據。
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>新增消費項目</h2>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: center; padding: 10px; border-radius: 6px;">
+        <button type="button" id="cameraBtn" title="拍照/辨識發票"
+                style="width: auto; margin-bottom: 10px; padding: 5px 12px; height: 34px; box-sizing: border-box; background: #444; color: #fff; border: 1px solid #555; border-radius: 6px; cursor: pointer; transition: background 0.2s;"
+                onmouseover="this.style.background='#555'" onmouseout="this.style.background='#444'">
+            相機辨識
+        </button>
+
+        <button type="button" id="voiceBtn" title="語音自動記帳"
+                style="width: auto; margin-bottom: 10px; padding: 5px 12px; height: 34px; box-sizing: border-box; background: #444; color: #fff; border: 1px solid #555; border-radius: 6px; cursor: pointer; transition: background 0.2s;"
+                onmouseover="this.style.background='#555'" onmouseout="this.style.background='#444'">
+            語音輸入
+        </button>
+
+        <button type="button"
+                onclick="window.location.href='editMenu.html'" 
+                style="width: auto; margin-bottom: 10px; padding: 5px 15px;">
+            編輯選單
+        </button>
+
+        <form id="addRecordForm" style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+            
+            <label>類別：</label>
+            <select name="category" id="categorySelect" style="width: 100%; margin: 0;" required></select>
+
+            <label>品項：</label>
+            <select name="item" id="itemSelect" style="width: 100%; margin: 0;" required></select>
+
+            <label>幣別：</label>
+            <select name="currency" id="currencySelect" style="width: 100%; margin: 0;" required></select>
+
+            <label>金額：</label>
+            <input type="number" name="price" id="priceInput" step="0.01" style="width: 100%; box-sizing: border-box; margin: 0;" required>
+
+            <div style="text-align: center; width: 100%; margin-top: 15px;">
+                <button type="submit" style="box-sizing: border-box; margin: 0;">儲存並自動換算</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="wallet.js"></script>
+</body>
+</html>

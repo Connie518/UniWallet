@@ -1,0 +1,10 @@
+python-dotenv
+Flask
+Flask-SQLAlchemy
+Flask-Login
+Flask-Cors
+requests
+beautifulsoup4
+datetime
+psycopg2-binary
+gunicorn

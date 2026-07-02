@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniWallet - EditMenu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+</head>
+
+<body>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>UniWallet</h1>
+        <p><strong id="usernameDisplay"></strong><a href="/" id="logoutBtn" style="margin-left: 10px;">登出</a></p>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+        <h2 style="margin: 0;">編輯選單</h2>
+        <button type="button" onclick="window.location.href='wallet.html'" style="width: auto; margin: 0; padding: 5px 15px;">
+            回首頁
+        </button>
+    </div>
+
+    <div class="form-container" style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 10px;">
+        
+        <div style="flex: 1; min-width: 300px; align-self: flex-start;">
+            <h3>類別</h3>
+            <div style="display: flex; gap: 8px; width: 100%;">
+                <input type="text" id="newCategoryInput" placeholder="自訂新類別" style="flex: 1; margin: 0; padding: 6px;" onkeydown="if(event.key === 'Enter'){ event.preventDefault(); addNewCategory(); }">
+                <button type="button" onclick="addNewCategory()" style="width: auto; margin: 0; padding: 0 15px;">新增</button>
+            </div>
+            
+            <div style="width: 100%; max-height: 200px; overflow-y: auto; border: 1px solid #444; border-radius: 6px; margin-bottom: 20px; margin-top: 10px;">
+                <table id="categoriesTable" style="width: 100%; margin: 0; border-collapse: collapse; text-align: center;">
+                    <tbody id="categoriesTbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="flex: 1; min-width: 300px;">
+            <h3>品項<span id="selectedCategoryTitle" style="font-size: 1em;"></span></h3>
+            
+            <div id="addItemSection" style="display: none; gap: 8px; width: 100%;">
+                <input type="text" id="newItemInput" placeholder="自訂新品項" style="flex: 1; margin: 0; padding: 6px;" onkeydown="if(event.key === 'Enter') { event.preventDefault(); addNewItem();}">
+                <button type="button" onclick="addNewItem()" style="width: auto; margin: 0; padding: 0 15px;">新增</button>
+            </div>
+
+            <div style="width: 100%; max-height: 200px; overflow-y: auto; border: 1px solid #444; border-radius: 6px; margin-bottom: 20px; margin-top: 10px;">
+                <table id="itemsTable" style="width: 100%; margin: 0; border-collapse: collapse; text-align: center;">
+                    <tbody id="itemsTbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <h3>幣別</h3>
+    <div style="display: flex; gap: 8px; width: 100%; flex-wrap: wrap;">
+        <input type="text" id="newCurrencyInput" placeholder="自訂幣別" style="flex: 1; min-width: 100px; margin: 0; padding: 6px;" onkeydown="if(event.key === 'Enter') { event.preventDefault(); addNewCurrency(); }">
+        <input type="text" id="newRateInput" placeholder="輸入匯率（若要使用即時匯率則無需填寫）" style="flex: 1; min-width: 100px; margin: 0; padding: 6px;" onkeydown="if(event.key === 'Enter') { event.preventDefault(); addNewCurrency(); }">
+        <button type="button" onclick="addNewCurrency()" style="width: auto; margin: 0; padding: 0 15px;">新增</button>
+    </div>
+
+    <div style="width: 100%; max-height: 200px; overflow-y: auto; border: 1px solid #444; border-radius: 6px; margin-bottom: 20px; margin-top: 10px;">
+        <table id="currenciesTable" style="width: 100%; margin: 0; border-collapse: collapse; text-align: center;">
+            <tbody id="currenciesTbody"></tbody>
+        </table>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="editMenu.js"></script>
+</body>
+</html>

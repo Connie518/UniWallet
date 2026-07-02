@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>UniWallet</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+    <style>
+        /* 隱藏初始化檢查時的畫面，避免閃爍 */
+        body { opacity: 0; transition: opacity 0.2s ease; }
+        body.loaded { opacity: 1; }
+    </style>
+</head>
+
+<body>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 90vh;">
+
+        <h1 style="margin-bottom: 10px; font-size: 2.8rem;">UniWallet</h1>
+        <p style="color: #a0a0a0; margin-bottom: 30px; text-align: center;">跨國消費即時換算多國匯率的帳本</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a href="login.html" style="display: inline-block; width: 120px; text-align: center; background-color: var(--button-base); color: var(--text-bright); padding: 10px 0; border-radius: 4px; text-decoration: none; font-weight: bold;">
+                登入
+            </a>
+            <a href="register.html" style="display: inline-block; width: 120px; text-align: center; background-color: var(--button-base); color: var(--text-bright); padding: 10px 0; border-radius: 4px; text-decoration: none; font-weight: bold;">
+                註冊
+            </a>
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        // 頁面載入時，先去跟後端確認是否已經登入過
+        window.addEventListener('DOMContentLoaded', async () => {
+            // 這裡假設後端 API 服務跑在 http://localhost:8000
+            // 如果前後端同網域，直接寫 '/api/user/me' 即可
+
+            try {
+                // 使用 credentials: 'include' 確保瀏覽器會把 Cookie (Session ID) 帶給後端
+                const response = await fetch(`${CONFIG.API_HOST}/api/user/me`, {
+                    method: 'GET',
+                    credentials: 'include' 
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    // 如果後端回應已認證，直接幫使用者跳轉到錢包頁面
+                    if (data.is_authenticated) {
+                        window.location.href = 'wallet.html';
+                        return; // 終止執行，不顯示當前首頁
+                    }
+                }
+            } catch (error) {
+                console.error('無法連接到後端 API:', error);
+            }
+
+            // 若未登入或連線失敗，正常顯示首頁內容
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>
