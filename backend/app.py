@@ -21,10 +21,6 @@ CORS(app, resources={r"/api/*": {"origins": frontend_origins}}, supports_credent
 
 db.init_app(app)
 
-# 初始化資料庫
-with app.app_context():
-    db.create_all()
-
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
@@ -116,7 +112,7 @@ def get_current_user():
         return jsonify({
             'is_authenticated': True,
             'user': {'id': current_user.id, 'username': current_user.username}
-        })
+        }), 200
     return jsonify({'is_authenticated': False}), 200
 
 # ==================== 資料 API ====================
@@ -150,7 +146,7 @@ def add_category():
     name = data.get('name', '').strip()
 
     if not name:
-        return jsonify({'status': 'error', 'mesage': '請輸入類別'}), 400
+        return jsonify({'status': 'error', 'message': '請輸入類別'}), 400
     
     exists = UserCategory.query.filter_by(name=name, user_id=current_user.id).first()
     if exists:
@@ -291,14 +287,14 @@ def add_record():
     currency_name = data.get('currency_name')
     price = data.get('price')
 
+    if not all([category, item, currency_name, price]):
+        return jsonify({'status': 'error', 'message': '請填寫完整的消費紀錄資訊'}), 400
+
     try:
         price = float(data.get('price'))
     except (ValueError, TypeError):
         return jsonify({'status': 'error', 'message': '金額格式錯誤'}), 400
-    
-    if not all([category, item, currency_name, price]):
-        return jsonify({'status': 'error', 'message': '請填寫完整的消費紀錄資訊'}), 400
-    
+        
     user_cur = UserCurrency.query.filter_by(name=currency_name, user_id=current_user.id).first()
 
     if not user_cur:
@@ -316,7 +312,7 @@ def add_record():
             response = requests.get("https://accessibility.cathaybk.com.tw/exchange-rate-search.aspx", verify=False)
             response.encoding = 'utf-8'
             soup = BeautifulSoup(response.text, 'html.parser')
-            target_td = soup.find('td', text=lambda text: text and currency_name in text and "Cash" not in text)
+            target_td = soup.find('td', string=lambda s: s and currency_name in s and "Cash" not in s)
             sell_rate = float(target_td.parent.find_all('td')[2].text.strip())
             twd = round(price * sell_rate, 2)
         except Exception:
@@ -341,7 +337,7 @@ def add_record():
 @app.route('/api/record/<int:record_id>', methods=['DELETE'])
 @login_required
 def delete_record(record_id):
-    record = Record.query.get(record_id)
+    record = db.session.get(Record, record_id)
     if not record:
         return jsonify({'status': 'error', 'message': '該紀錄不存在'}), 404
     
@@ -354,6 +350,9 @@ def delete_record(record_id):
                 
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+
     port_num = int(os.environ.get('PORT', 8000))
     is_debug = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     app.run(host='0.0.0.0', port=port_num, debug=is_debug)
