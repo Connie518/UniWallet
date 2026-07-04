@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM ghcr.io/docker-library/nginx:alpine
 
 COPY . /usr/share/nginx/html/
 
