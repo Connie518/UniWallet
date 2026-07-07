@@ -67,7 +67,7 @@ spec:
               memory: 256Mi
           env:
             - name: FRONTEND_URL
-              value: "http://127.0.0.1:3000,http://localhost:3000,http://20.2.138.20"
+              value: "http://20.2.138.20"
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -96,7 +96,7 @@ spec:
               value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(POSTGRES_DB)"
           livenessProbe:
             httpGet:
-              path: /api/wallet/data
+              path: /health
               scheme: HTTP
               port: 8000
             initialDelaySeconds: 30

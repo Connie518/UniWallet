@@ -29,7 +29,7 @@ DEFAULT_RATES = {'TWD': 1.00}
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
 # 未登入時的處理（覆蓋原本的預設跳轉，改回傳 JSON）
 @login_manager.unauthorized_handler
@@ -49,6 +49,11 @@ def init_user_default_currencies(user_id):
         except Exception as e:
             db.session.rollback()
             print(f"初始化幣別失敗: {e}")
+
+# --- Ckeck backend is ok ---
+@app.route('/health', methods=['GET'])
+def health():
+    return "OK", 200
 
 # ==================== 認證 API ====================
 
