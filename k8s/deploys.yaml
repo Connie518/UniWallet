@@ -87,15 +87,15 @@ spec:
               value: postgres-service
             - name: DB_PORT
               value: "5432"
-            - name: POSTGRES_URL
+            - name: DATABASE_URL
               value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(POSTGRES_DB)"
           livenessProbe:
             httpGet:
               path: /api/wallet/data
               scheme: HTTP
               port: 8000
-            initialDelaySeconds: 20
-            periodSeconds: 5
+            initialDelaySeconds: 30
+            periodSeconds: 10
 ---
 apiVersion: apps/v1
 kind: Deployment
