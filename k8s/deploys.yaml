@@ -68,6 +68,11 @@ spec:
           env:
             - name: FRONTEND_URL
               value: "http://127.0.0.1:3000,http://localhost:3000,http://20.2.138.20"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: secretkey
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
