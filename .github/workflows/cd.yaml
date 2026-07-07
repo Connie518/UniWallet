@@ -36,3 +36,12 @@ jobs:
         context: ./backend
         push: true
         tags: ghcr.io/connie518/uniwallet_backend:latest
+
+    - name: Set up kubectl
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBE_CONFIG }} > $HOME/.kube/config"
+    
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f ./k8s/

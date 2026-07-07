@@ -178,13 +178,13 @@ function applyFilters() {
 
     // 根據選中的類別，顯示/隱藏品項選單裡的 option
     itemOptions.forEach(opt => {
-        if (opt.value === 'all') return; // 「所有品項」永遠顯示
+        if (opt.value === 'all') return;
         const optCategory = opt.getAttribute('data-category');
 
         if (fCategory === 'all' || optCategory === fCategory) {
-            opt.style.display = ''; // 顯示符合該類別的品項
+            opt.style.display = '';
         } else {
-            opt.style.display = 'none'; // 隱藏不符合的
+            opt.style.display = 'none';
         }
     });
 
@@ -298,34 +298,6 @@ function resetFilters() {
     document.getElementById('filterCurrency').value = 'all';
     applyFilters();
 }
-    
-// // 根據當前選取的類別，動態顯示品項
-// function filterItems() {
-//     const selectedCategory = document.getElementById('categorySelect').value;
-//     const itemSelect = document.getElementById('itemSelect');
-//     const options = itemSelect.options;
-
-//     let firstVisibleOption = null;
-
-//     for (let i = 0; i < options.length; i++) {
-//         const option = options[i];
-//         if (option.getAttribute('data-category') === selectedCategory) {
-//             option.style.display = 'block';
-//             if (!firstVisibleOption) firstVisibleOption = option;
-//         } else {
-//             option.style.display = 'none';
-//         }
-//     }
-
-//     if (firstVisibleOption) {
-//         itemSelect.value = firstVisibleOption.value;
-//     } else {
-//         itemSelect.value = "";
-//     }
-// }
-// window.onload = function() {
-//     filterItems();
-// };
 
 function triggerCamera() {
     alert("正在開發中，拍照辨識功能尚未完成，請稍後再試。");
